@@ -2,11 +2,13 @@ __all__ = [
     "Struct",
     "Object",
     "String",
+    "Bytes",
     "Integer",
     "Double",
     "Boolean",
     "Array",
-    "Map"
+    "Map",
+    "Base64"
 ]
 
 from typing import Type, Union, Tuple, Dict, List, Any
@@ -203,10 +205,18 @@ class Base64(Field.Base):
         return base64.b64decode(value.encode())
 
     @classmethod
-    def pack(cls, value: bytes) -> str:
+    def pack(cls, value: Union[str, bytes]) -> str:
+        if isinstance(value, str):
+            value = value.encode()
         return base64.b64encode(value).decode()
 
 Field.register(Base64)
+
+class Bytes(Base64):
+    name = "bytes"
+    type = bytes
+
+Field.register(Bytes)
 
 class Integer(Field.Base):
     name = "integer"
